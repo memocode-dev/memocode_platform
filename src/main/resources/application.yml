@@ -1,0 +1,56 @@
+server:
+  shutdown: graceful
+
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 20       # ?? ? ??
+      minimum-idle: 2             # ?? ?? ???
+      idle-timeout: 60000         # ?? ?? ?? ?? (1?)
+      max-lifetime: 300000
+      connection-timeout: 30000   # ??? ?? ?? (30?)
+      validation-timeout: 5000    # ??? ?? ???? (5?)
+      leak-detection-threshold: 10000 # ?? ?? ???? (2?)
+      data-source-properties:
+        rewriteBatchedStatements: true
+        serverTimezone: Asia/Seoul
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        create_empty_composites.enable: true
+        default_batch_fetch_size: 1000
+        jdbc.batch_size: 1000
+        order_inserts: true
+        order_updates: true
+
+auth:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
+
+springdoc:
+  swagger-ui:
+    persist-authorization: true
+    operations-sorter: method
+    tags-sorter: alpha
+
+p6spy.config:
+  excludecategories: none
+  logbatch: true
+  includecategories: debug, info, batch
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: ${P6SPY_ENABLE:true}
+
+logging:
+  level:
+    com.zaxxer.hikari.HikariConfig: DEBUG
+    com.zaxxer.hikari: TRACE
